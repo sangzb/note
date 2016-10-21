@@ -1,0 +1,11 @@
+第一步，下载
+
+wget https://coding.net/u/njzhenghao/p/download/git/raw/master/net_speeder-installer.sh
+
+第二部，编译并安装
+
+bash net_speeder-installer.sh
+
+第三部，端口加速
+
+nohup /usr/local/net_speeder/net_speeder venet0 "ip" >/dev/null 2>&1 &
