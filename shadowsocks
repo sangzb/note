@@ -1,0 +1,18 @@
+安装shadowsocks
+1.yum install python-setuptools && easy_install pip
+
+2.pip install shadowsocks
+
+3. 配置shadowsocks.json
+
+{
+  "server": "138.128.208.33",
+  "server_port": 8899,
+  "local_address": "127.0.0.1",
+  "local_port": 8900,
+  "password": "83szb11szb07",
+  "timeout": 0,
+  "method": "aes-256-cfb"
+}
+
+4.ssserver -c /etc/shadowsocks.json -d start
