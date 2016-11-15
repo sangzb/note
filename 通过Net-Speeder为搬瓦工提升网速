@@ -9,3 +9,6 @@ bash net_speeder-installer.sh
 第三部，端口加速
 
 nohup /usr/local/net_speeder/net_speeder venet0 "ip" >/dev/null 2>&1 &
+
+锐速
+wget -N --no-check-certificate https://raw.githubusercontent.com/91yun/serverspeeder/master/serverspeeder-all.sh && bash serverspeeder-all.sh
