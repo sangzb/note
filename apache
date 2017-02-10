@@ -1,0 +1,15 @@
+安装httpd
+sudo yum clean all
+sudo yum -y update
+sudo yum -y install httpd
+
+打开防火墙
+sudo firewall-cmd --permanent --add-port=80/tcp
+sudo firewall-cmd --permanent --add-port=443/tcp
+sudo firewall-cmd --reload
+
+重启打开apache
+sudo systemctl start httpd
+sudo systemctl enable httpd
+sudo systemctl status httpd
+sudo systemctl stop httpd
