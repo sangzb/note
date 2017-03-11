@@ -25,4 +25,9 @@ chmod +x shadowsocks.sh
 
 ssserver -c /etc/shadowsocks.json -d start
 
+
+
+goagentx
 https://code.google.com/archive/p/goagentx/downloads
+switch omega
+https://raw.githubusercontent.com/gfwlist/gfwlist/master/gfwlist.txt
