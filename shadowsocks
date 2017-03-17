@@ -25,7 +25,8 @@ chmod +x shadowsocks.sh
 
 ssserver -c /etc/shadowsocks.json -d start
 
-
+小飞机
+http://shadowsocks.org/en/download/clients.html
 
 goagentx
 https://code.google.com/archive/p/goagentx/downloads
