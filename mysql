@@ -1,0 +1,25 @@
+#开启3306端口
+[caibo@localhost /]$ firewall-cmd –zone=public –add-port=3306/tcp –permanent
+success
+#reload一下
+[caibo@localhost /]$ firewall-cmd –reload
+
+systemctl stop firewalld.service #停止
+systemctl disable firewalld.service #禁用
+
+mysql安装后还要允许远程连接，其他服务器才能连接到本地的数据库。
+
+mysql账户是否不允许远程连接。如果无法连接可以尝试以下方法：
+
+mysql -u root -p //登录MySQL
+mysql> GRANT ALL PRIVILEGES ON *.* TO ‘root’@’%’WITH GRANT OPTION; //任何远程主机都可以访问数据库
+mysql> FLUSH PRIVILEGES; //需要输入次命令使修改生效
+mysql> EXIT //退出
+
+也可以通过修改表来实现远程：
+
+mysql -u root -p
+
+mysql> use mysql;
+mysql> update user set host = ‘%’ where user = ‘root’;
+mysql> select host, user from user;
