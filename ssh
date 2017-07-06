@@ -1,0 +1,19 @@
+authorized_keys
+chmod 700 ~/.ssh/
+chmod 600 ~/.ssh/authorized_keys
+
+su without password
+方法1：
+运行visudo（或者vi /etc/sudoers）命令
+在## Same thing without a password
+# %wheel        ALL=(ALL)       NOPASSWD: ALL
+下方添加一个类似的行
+oracle ALL=(ALL)       NOPASSWD: ALL
+
+方法2：
+vi /etc/pam.d/su
+ 将 auth这一列的注释号 去除
+# Uncomment the following line to implicitly trust users in the "wheel" group.
+auth            sufficient      pam_wheel.so trust use_uid
+然后将登陆用户加入 wheel组
+usermod -G wheel oracle
