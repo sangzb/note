@@ -1,3 +1,77 @@
+yum安装MySQL
+
+安装mysql yum repository
+
+wget https://repo.mysql.com//mysql57-community-release-el7-11.noarch.rpm
+
+yum localinstall mysql57-community-release-el7-11.noarch.rpm
+确认yum repository已经安装
+
+yum repolist enabled | grep "mysql.*-community.*"
+mysql-connectors-community/x86_64       MySQL Connectors Community           36
+mysql-tools-community/x86_64            MySQL Tools Community                47
+mysql57-community/x86_64                MySQL 5.7 Community Server          187
+查看MySQL版本：
+
+yum repolist all | grep mysql
+mysql-cluster-7.5-community/x86_64 MySQL Cluster 7.5 Community    disabled
+mysql-cluster-7.5-community-source MySQL Cluster 7.5 Community -  disabled
+mysql-cluster-7.6-community/x86_64 MySQL Cluster 7.6 Community    disabled
+mysql-cluster-7.6-community-source MySQL Cluster 7.6 Community -  disabled
+mysql-connectors-community/x86_64  MySQL Connectors Community     enabled:    36
+mysql-connectors-community-source  MySQL Connectors Community - S disabled
+mysql-tools-community/x86_64       MySQL Tools Community          enabled:    47
+mysql-tools-community-source       MySQL Tools Community - Source disabled
+mysql-tools-preview/x86_64         MySQL Tools Preview            disabled
+mysql-tools-preview-source         MySQL Tools Preview - Source   disabled
+mysql55-community/x86_64           MySQL 5.5 Community Server     disabled
+mysql55-community-source           MySQL 5.5 Community Server - S disabled
+mysql56-community/x86_64           MySQL 5.6 Community Server     disabled
+mysql56-community-source           MySQL 5.6 Community Server - S disabled
+mysql57-community/x86_64           MySQL 5.7 Community Server     enabled:   187
+mysql57-community-source           MySQL 5.7 Community Server - S disabled
+mysql80-community/x86_64           MySQL 8.0 Community Server     disabled
+mysql80-community-source           MySQL 8.0 Community Server - S disabled
+安装：
+
+
+
+yum install mysql-community-server
+启动和配置MySQL服务
+
+修改MySQL配置文件/etc/my.cnf
+
+datadir=/home/mysql
+
+server_id = 1
+character-set-server=utf8mb4
+collation-server=utf8mb4_unicode_ci
+default-storage-engine=INNODB
+#Optimize omit
+sql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES
+log-bin     = binlog
+log_bin_trust_function_creators=1
+binlog_format = ROW
+expire_logs_days = 99
+sync_binlog = 0
+slow-query-log=1
+slow-query-log-file=/var/log/mysql/slow-queries.log
+long_query_time = 3
+log-queries-not-using-indexes
+explicit_defaults_for_timestamp = 1
+启动MySQL服务：
+
+systemctl start mysqld
+systemctl status mysqld
+查看生成mysql root用户临时密码：
+
+grep 'temporary password' /var/log/mysqld.log
+修改root用户的密码:
+
+mysql -uroot -p
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'MyNewPass4!';
+
+
 #开启3306端口
 [caibo@localhost /]$ firewall-cmd –zone=public –add-port=3306/tcp –permanent
 success
