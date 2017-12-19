@@ -10,3 +10,5 @@ yum install -y gcc gcc-c++ make automake
 5、gmake
 6、gmake install
 7、cmake -version
+
+hash -r
