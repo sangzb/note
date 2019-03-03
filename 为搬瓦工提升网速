@@ -4,3 +4,41 @@ https://www.bandwagonhost.net/1082.html
 wget https://raw.githubusercontent.com/kuoruan/shell-scripts/master/ovz-bbr/ovz-bbr-installer.sh 
 chmod +x ovz-bbr-installer.sh 
 ./ovz-bbr-installer.sh
+
+
+# CentOS 7
+# 64 bit
+# ldd > = 2.14
+# tun/tap enabled
+wget https://github.com/tcp-nanqinlang/lkl-haproxy/releases/download/1.1.1/tcp_nanqinlang-haproxy-centos.sh
+bash tcp_nanqinlang-haproxy-centos.sh
+ 
+
+以下进行脚本使用说明：
+
+安装 LKL
+此命令用于安装 LKL。
+
+在/home/tcp_nanqinlang进行安装，所以安装完成后不要动这个文件夹了（除非你想修改端口）。
+
+安装过程中，会提示你选择
+
+单个端口
+或
+
+端口段
+输入，具体已在运行脚本的提示中有说明，这里不再赘述。
+
+安装完成后，会开启 LKL。以后重启机器也会随开机自启。
+
+以后若需要修改转发端口，请将/home/tcp_nanqinlang/haproxy.cfg中的端口号和/home/tcp_nanqinlang/redirect.sh中的端口号改为你想要的端口或端口段，修改完成后重启服务器。
+
+使用前请注意自己的 iptables 相关设置。
+
+检查 LKL 运行状态
+此命令用于检查 LKL 运行与否，可通过返回的提示判断。
+
+卸载 LKL
+运行此命令会卸载 haproxy、删除 /home/tcp_nanqinlang、移除 rc.local 开机自启项。稍后请自行移除iptables相关规则。
+
+该脚本项目最新的地址是：https://github.com/tcp-nanqinlang
