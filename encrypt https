@@ -1,0 +1,141 @@
+最近在项目上线过程中顺便整理了几篇原创文章，还没发到自己的博客上，先在这里分享了。
+
+CentOS7下nginx安装使用Let’s Encrypt证书的完整过程
+网站转成https是大势所趋。但是在国内，推进的过程显然要比国外慢很多。
+
+现阶段如果将自己的网站改成https以后，会碰到这样的尴尬现象：如果在页面上引用了http://的链接或者图片，用户在浏览器上会看到类似该网站是非安全网站的警告，对于网站运营者来说可以说非常冤。由于很多链接是第三方的，没有办法去控制。
+
+对于api接口类的网站，就不存在混合的问题，所以首先应该从api后台接口部分开始用https。(ios已经强制要求接口地址必须为https了)
+
+大牌提供商的SSL证书可不便宜，对于大公司也许不算什么，但是对于小公司及个人来说贵了。现在国外出现的免费SSL服务商Let’s Encrypt，绝对是小公司或者开发者的福音。(现阶段在天朝也能够正常使用，但是未来不清楚。如果天朝有一天自绝于世界网络的话，没准这个证书也会被封堵。)
+
+这里整理了在CentOS7 + nginx安装和使用Let’s Encrypt的完整过程。
+
+官方网站：https://letsencrypt.org
+
+申请let's encript 证书可以有三种方式：
+
+通过certbot脚本
+通过支持Letencript的虚拟主机提供商
+手工申请manual mode
+没有特殊情况，首选采用certbot脚本方式。
+
+由于letsencrypt证书的有效期只有90天，需要长期使用的话，需要在失效前进行延长申请。用certbot脚本工具，可以将延期申请的脚本写到定时任务来自动完成，非常方便。
+
+一、前提条件
+拥有一个域名，例如mydomain.com (在国内主机的用的话，还需要通过ICP备案)
+在域名服务器创建一条A记录，指向云主机的公网IP地址。例如demo.mydomain.com指向xxx.xxx.xxx.xxx的IP地址
+要等到新创建的域名解析能在公网上被解析到。
+据说国内的域名提供商对letsencrypt的支持非常差，但是经过试验，至少现阶段用dnspod解析的域名还没碰到问题。
+二、在云主机上安装nginx服务器，配置好最基本的80口ngnix站点
+例如，假设为demo.mydomain.com快速配置一个最简单的nginx站点
+
+安装nginx服务器
+
+yum install -y nginx
+配置一个nginx站点
+
+mkdir /opt/www/demo.mydomain.com -p
+chown nginx:nginx /opt/www/demo.mydomain.com/ -R
+vi /etc/nginx/conf.d/demo.mydomain.com.conf
+将以下内容复制到该文件中
+
+server {
+listen 80;
+server_name demo.mydomain.com;
+charset utf-8;
+
+root /opt/www/demo.mydomain.com;
+index index.html index.htm;
+
+access_log  /var/log/nginx/demo.mydomain.com_access.log;
+error_log  /var/log/nginx/demo.mydomain.com_error.log;
+}
+启动nginx服务
+
+systemctl start nginx
+注意：要确认CentOS服务器开放80口及443端口
+
+在浏览器上确认访问到http://demo.mydomain.com 如果没有页面的话，正常情况下应该会显示403错误。nginx站点配置完成。
+
+三、安装certbot工具
+yum install -y epel-release
+yum install -y certbot
+四、使用certbot命令初次申请证书
+# 使用方法：certbot certonly --webroot -w [Web站点目录] -d [站点域名] -m [联系人email地址] --agree-tos
+# 例如：
+certbot certonly --webroot -w /opt/www/demo.mydomain.com -d demo.mydomain.com -m myname@gmail.com --agree-tos
+注意：联系人email地址要填写真实有效的，letsencrypt会在证书在过期以前发送预告的通知邮件。 申请成功后，会显示以下Congratulations信息
+
+IMPORTANT NOTES:
+ - Congratulations! Your certificate and chain have been saved at
+   /etc/letsencrypt/live/[xxx.xxx.xxx]/fullchain.pem. Your cert will
+   expire on 2017-03-20. To obtain a new or tweaked version of this
+   certificate in the future, simply run certbot again. To
+   non-interactively renew *all* of your certificates, run "certbot
+   renew"
+ - If you like Certbot, please consider supporting our work by:
+
+   Donating to ISRG / Let's Encrypt:   https://letsencrypt.org/donate
+   Donating to EFF:                    https://eff.org/donate-le
+证书的保存位置在：
+
+/etc/letsencrypt/live/demo.mydomain.com/
+五、查看证书有效期的命令
+openssl x509 -noout -dates -in /etc/letsencrypt/live/[demo.mydomain.com]/cert.pem
+显示的是格林威治时间，不知道怎么才能显示当前时区。
+
+六、设置定时任务自动更新证书
+letsencrypt证书的有效期是90天，但是可以用脚本去更新。
+
+# 更新证书
+certbot renew --dry-run 
+# 如果不需要返回的信息，可以用静默方式：
+certbot renew --quiet
+注意：更新证书时候网站必须是能访问到的
+
+# 可以使用crontab定时更新，例如：
+# 每月1号5时执行执行一次更新，并重启nginx服务器
+00 05 01 * * /usr/bin/certbot renew --quiet && /bin/systemctl restart nginx
+七、应用实例：配置nginx使用证书开通https站点
+生成Perfect Forward Security（PFS）键值
+
+mkdir /etc/ssl/private/ -p
+cd /etc/ssl/private/
+openssl dhparam 2048 -out dhparam.pem
+Perfect Forward Security（PFS)是个什么东西，中文翻译成完美前向保密，一两句话也说不清楚，反正是这几年才提倡的加强安全性的技术。如果本地还没有生成这个键值，需要先执行生成的命令。
+生成的过程还挺花时间的，喝杯咖啡歇会儿吧。
+配置nginx站点，例如/etc/nginx/conf.d/demo.mydomain.com.conf，样例内容如下：
+
+server {
+listen 80;
+server_name demo.mydomain.com;
+rewrite ^ https://$server_name$request_uri? permanent;
+}
+server {
+  listen 443 ssl;
+  server_name demo.mydomain.com;
+
+  charset utf-8;
+  root /opt/www/demo.mydomain.com;
+  index index.html index.htm;
+
+  access_log  /var/log/nginx/demo.mydomain.com_access.log;
+  error_log  /var/log/nginx/demo.mydomain.com_error.log;
+
+  # letsencrypt生成的文件
+  ssl_certificate /etc/letsencrypt/live/demo.mydomain.com/fullchain.pem;
+  ssl_certificate_key /etc/letsencrypt/live/demo.mydomain.com/privkey.pem;
+
+  ssl_session_timeout 1d;
+  ssl_session_cache shared:SSL:50m;
+  ssl_session_tickets on;
+
+  ssl_dhparam /etc/ssl/private/dhparam.pem;
+
+  ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+  # 一般推荐使用的ssl_ciphers值: https://wiki.mozilla.org/Security/Server_Side_TLS
+  ssl_ciphers 'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128:AES256:AES:DES-CBC3-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK';
+  ssl_prefer_server_ciphers on;
+}
+在浏览器打开http://demo.mydomain.com, 如果正常跳转到https://demo.mydomain.com，就算成功了。 如果是chrome浏览器，在地址栏点击小锁的图标，可以查看证书的详情
