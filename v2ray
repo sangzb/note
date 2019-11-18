@@ -2,3 +2,7 @@ bash <(curl -s -L https://git.io/v2ray.sh)
 
 
 bash <(curl -L -s https://raw.githubusercontent.com/wulabing/V2Ray_ws-tls_bash_onekey/master/install.sh) | tee v2ray_ins.log
+
+7619e2f6-6794-4b05-8542-9689fbdef5cd
+
+/cd02f8ef/
