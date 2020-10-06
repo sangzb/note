@@ -1,0 +1,28 @@
+http://192.168.1.1/hidden_version_switch.gch，将其切换到Default Version即可切换到标准固件下。（注意：切换前一定要备份好LOID码！进入后台中将其抄下即可！）
+
+启动完毕后，设备已恢复出厂设置，现在Telnet没有被关闭，所以，可以正常登录。中兴设备的默认telnet用户名为root，密码为Zte521（第一个Z大写）。
+
+首先，为了防止设备激活LOID后关闭Telnet，我们需要输入以下命令：
+
+sendcmd 1 DB set TelnetCfg TS_Enable 1
+sendcmd 1 DB set TelnetCfg Lan_Enable 1
+sendcmd 1 DB set TelnetCfg Lan_EnableAfterOlt 1
+sendcmd 1 DB save
+
+其次，进行激活LOID操作，进入设备的管理页面http://192.168.1.1，点击“注册设备”按钮，输入LOID码后，静等其激活完毕。
+
+sendcmd 1 DB set TelnetCfg 0 TS_UName XXXXX
+sendcmd 1 DB set TelnetCfg 0 TS_UPwd XXXXX
+
+sendcmd 1 DB set DevAuthInfo 0 User XXXXX
+sendcmd 1 DB set DevAuthInfo 0 Pass XXXXX
+
+为了安全起见，我们要阻止广域网对该设备的远程控制，输入以下命令：
+
+sendcmd 1 DB set TelenetCfg 0 Wan_Enable 0
+
+最后，和任何交换机路由器一样，需要保存方能生效：
+
+sendcmd 1 DB save
+
+reboot
