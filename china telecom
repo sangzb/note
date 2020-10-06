@@ -1,3 +1,8 @@
+
+
+http://192.168.1.1/bridge_route.gch
+
+
 http://192.168.1.1/hidden_version_switch.gch，将其切换到Default Version即可切换到标准固件下。（注意：切换前一定要备份好LOID码！进入后台中将其抄下即可！）
 
 启动完毕后，设备已恢复出厂设置，现在Telnet没有被关闭，所以，可以正常登录。中兴设备的默认telnet用户名为root，密码为Zte521（第一个Z大写）。
