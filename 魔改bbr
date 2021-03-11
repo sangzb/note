@@ -3,3 +3,5 @@ wget "https://github.com/chiakge/Linux-NetSpeed/raw/master/tcp.sh" && chmod +x t
 "1. 安装 BBR/BBR魔改版内核"        对应4,5,6（原版，魔改，暴力魔改）
 "2. 安装 BBRplus版内核 "                对应7（plus）
 "3. 安装 Lotserver(锐速)内核"        对应8（锐速）
+
+bash <(curl -s -L https://github.com/V2RaySSR/Trojan/raw/master/Trojan.sh)
