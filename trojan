@@ -1,1 +1,4 @@
 https://github.com/jinwyp/one_click_script
+
+
+bash <(curl -sL https://raw.githubusercontent.com/daveleung/hijkpw-scripts-mod/main/trojan-go_mod1.sh)
