@@ -3,4 +3,7 @@
 cloudfront:
 https://d7uri8nf7uskq.cloudfront.net/tools/list-cloudfront-ips
 
+gcore:
+https://api.gcorelabs.com/cdn/public-net-list
+
 
