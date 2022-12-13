@@ -13,3 +13,17 @@ sed -i 's/mirrorlist/#mirrorlist/g' /etc/yum.repos.d/CentOS-*
 sed -i 's|#baseurl=http://mirror.centos.org|baseurl=http://vault.centos.org|g' /etc/yum.repos.d/CentOS-*
 
 yum update
+
+
+centos8项目官方已于2021年底停止，相关源已无法使用，所以网上22年前的换源教程都已无法使用。
+
+# 进入配置文件夹
+cd /etc/yum.repos.d/
+# 删除旧的配置文件
+rm -rf *.repo
+# 输入“y”回车确认
+
+wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-vault-8.5.2111.repo
+
+# 如果你没有安装wget，也可以用下面命令：
+curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-vault-8.5.2111.repo
