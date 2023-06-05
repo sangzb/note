@@ -1,3 +1,5 @@
+curl -i -X GET https://api.gcore.com/cdn/public-ip-list
+
 ./CloudflareST -t 1 -url https://d3lt6rblgn8le7.cloudfront.net/100mb.test
 
 cloudfront:
