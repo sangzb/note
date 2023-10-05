@@ -27,3 +27,18 @@ wget -O /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos
 
 # 如果你没有安装wget，也可以用下面命令：
 curl -o /etc/yum.repos.d/CentOS-Base.repo https://mirrors.aliyun.com/repo/Centos-vault-8.5.2111.repo
+
+
+更换yum源
+
+进入root，切换至yum.repos.d目录
+cd /etc/yum.repos.d/
+  创建新文件夹并将源文件备份为repo.bak
+mkdir backup && mv *repo backup/
+  下载国内yum源文件
+curl -o /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-8.repo
+  更新下载yum源地址
+sed -i -e"s|mirrors.cloud.aliyuncs.com|mirrors.aliyun.com|g " /etc/yum.repos.d/CentOS-*
+sed -i -e "s|releasever|releasever-stream|g" /etc/yum.repos.d/CentOS-*
+  生成缓存
+yum clean all && yum makecache
