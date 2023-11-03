@@ -1,6 +1,6 @@
 curl -i -X GET https://api.gcore.com/cdn/public-ip-list
 
-./CloudflareST -t 1 -url http://d3ul8itx8a7c80.cloudfront.net/download.test
+./CloudflareST -t 1 -url http://d3ul8itx8a7c80.cloudfront.net/test.zip
 
 cloudfront:
 https://d7uri8nf7uskq.cloudfront.net/tools/list-cloudfront-ips
