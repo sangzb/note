@@ -1,9 +1,11 @@
-curl -i -X GET https://api.gcore.com/cdn/public-ip-list
 
-./CloudflareST -t 1 -url http://d3ul8itx8a7c80.cloudfront.net/test.zip
+gcore iplist
+curl -i -X GET https://api.gcore.com/cdn/public-ip-list
 
 cloudfront:
 https://d7uri8nf7uskq.cloudfront.net/tools/list-cloudfront-ips
+
+./CloudflareST -t 1 -url http://d3ul8itx8a7c80.cloudfront.net/test.zip
 
 cloudflare:
 104.22.71.97      1       1       0.00    129.59    18.67          
