@@ -7,3 +7,9 @@ pvs: mv id_rsa.pub authorized_keys
     chmod 600 ~/.ssh/authorized_keys
     
     可以关闭pvs上密码登录
+
+
+
+find . -ctime +7 -name "*" | xargs -i rm -rf {}
+
+大概解释一下这个命令，删除当前目录下 7天前所有数据，如果还有 Argument list too long问题，就把时间适当调前一些，比如30天前 -ctime +30。
